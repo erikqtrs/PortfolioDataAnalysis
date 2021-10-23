@@ -1,4 +1,4 @@
-# Data Analysisi Portfolio Projects
+# Data Analysis Portfolio Projects
 
 Hi, I´m Erik and I`m an Data Analyst and Back-end developer in training from Ecuador.
 
