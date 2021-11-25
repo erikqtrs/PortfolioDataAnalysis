@@ -1,0 +1,73 @@
+-- Covid 19 Exploratory Data Analysis
+-- Date: 12-Nov-2021
+
+Select * From covid
+
+--Cleaning Data
+Alter Table covid
+Drop Column level_0,
+Drop Column "index"
+
+Alter Table covid
+Alter Column "date" Type date Using date::date;
+
+Delete from continentcovid
+where location in ('European Union', 'High income', 'International', 'Low income', 'Lower middle income', 'Upper middle income', 'World')
+
+-- Analysys
+
+-- Total cases in the world
+Select sum(total_cases) as "Total Cases" from covid
+Select * from continentcovid
+
+-- Total cases per continent
+Create View total_cases_per_continent as
+select continent, sum(total_cases) from covid
+group by continent
+
+-- Total deaths per continent
+Create View total_deaths_per_contient as
+select total_deaths, sum(total_deaths) from covid
+group by total_deaths
+
+-- Country with most cases
+Select "location", total_cases from covid
+where total_cases is not null
+order by total_cases desc limit 1
+
+
+-- Total Cases vs Population
+-- Percentage of population with covid in the world
+Select location, continent, (total_cases/population) * 100 as PercentagePopulationInfected
+From covid where total_cases is not null
+
+-- Total Cases vs Total Deaths
+-- Percentage of deaths
+Select location, continent , (total_deaths/total_cases) * 100 as "percentagedeaths", population
+From covid
+
+-- Percentage of infected population by contient
+select location, (total_cases/population)*100 as percentageinfectedpopulation from continentcovid
+
+-- Mortality percentage by continent
+Select location, (total_deaths/total_cases)*100 as percentagedeathscontiental from continentcovid 
+
+-- Showing countries with highest death count
+Select location, total_deaths from covid
+where total_deaths is not null
+order by total_deaths desc limit 10
+
+-- Showing countries with highest vaccination count
+Select location, continent, total_vaccinations from covid
+where total_vaccinations is not null
+order by total_vaccinations desc limit 10
+
+-- Showing the countries with highest count of new cases
+Select covid.location, continent, covid.new_cases from covid
+where covid.new_cases is not null
+order by covid.new_cases desc limit 10
+
+-- Showing the countries with highest count of new deaths
+Select covid.location, covid.continent, covid.new_deaths from covid
+where covid.new_deaths is not null
+order by covid.new_deaths desc limit 10
